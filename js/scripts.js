@@ -15,15 +15,21 @@ Contact.prototype.fullName = function() {
   return this.firstName + " " + this.lastName;
 }
 
-var newContact;
+Address.prototype.fullAddress = function() {
+  return this.street + ", " + this.city + ", " + this.state;
+}
 
+var newContact;
+var checkFlag = false;
+var addressHTML;
 // user interface logic
 $(document).ready(function() {
   $('#add-address').click(function() {
-    var addressHTML = "";
-    var addressHTML = $('#new-addresses').html;
+    if (!checkFlag) {
+      addressHTML = $('#new-addresses').html();
+    }
     $('#new-addresses').append(addressHTML);
-
+    checkFlag = true;
   });
     $("form#new-contact").submit(function(event) {
       event.preventDefault();
@@ -42,21 +48,25 @@ $(document).ready(function() {
       });
 
       $("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
-      });
+
 
       $(".contact").last().click(function() {
         $("#show-contact").show();
-        $("#show-contact h2").text(newContact.firstName);
+        $("#show-contact h2").text(newContact.fullName());
         $(".first-name").text(newContact.firstName);
         $(".last-name").text(newContact.lastName);
 
         $("ul#addresses").text("");
         newContact.addresses.forEach(function(address) {
-          $("ul#addresses").append("<li>" + address.street + ", " + address.city + " " + address.state + "</li>");
+          $("ul#addresses").append("<li>" + address.fullAddress() + "</li>");
+        });
       });
 
       $("input#new-first-name").val("");
       $("input#new-last-name").val("");
+      $("input.new-street").val("");
+      $("input.new-city").val("");
+      $("input.new-state").val("");
     });
 
 });
